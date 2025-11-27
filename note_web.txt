@@ -11,7 +11,18 @@ Ghi log trong web.config:
   </location>
 </configuration>
 
-tạo db trong mssql rồi sửa appsettings.json như sau:
+Query tạo userlogin db và cấp quyền ( đã tạo db RedTeamSiteDb từ trước)
+-- Tạo login ở mức server
+CREATE LOGIN appuser WITH PASSWORD = 'CyRadar@123';
+-- Tạo user trong database RedTeamSiteDb
+USE RedTeamSiteDb;
+CREATE USER appuser FOR LOGIN appuser;
+-- Cấp quyền db_owner cho user này
+ALTER ROLE db_owner ADD MEMBER appuser;
+
+
+
+Sau khi tạo db trong mssql rồi sửa appsettings.json như sau:
 "DefaultConnection": "Server=localhost\\SQLEXPRESS;Database=RedTeamSiteDb;User Id=appuser;Password=CyRadar@123;MultipleActiveResultSets=true;TrustServerCertificate=True"
 
 databasename: RedTeamSiteDb
@@ -96,4 +107,5 @@ CREATE TABLE [dbo].[AspNetUserTokens] (
 
 
     
+
 
