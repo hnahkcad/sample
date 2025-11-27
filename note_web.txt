@@ -1,0 +1,99 @@
+Ghi log trong web.config:
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <location path="." inheritInChildApplications="false">
+    <system.webServer>
+      <handlers>
+        <add name="aspNetCore" path="*" verb="*" modules="AspNetCoreModuleV2" resourceType="Unspecified" />
+      </handlers>
+      <aspNetCore processPath="dotnet" arguments=".\RedTeamSite.dll" stdoutLogEnabled="true" stdoutLogFile=".\logs\stdout" hostingModel="inprocess" />
+    </system.webServer>
+  </location>
+</configuration>
+
+tạo db trong mssql rồi sửa appsettings.json như sau:
+"DefaultConnection": "Server=localhost\\SQLEXPRESS;Database=RedTeamSiteDb;User Id=appuser;Password=CyRadar@123;MultipleActiveResultSets=true;TrustServerCertificate=True"
+
+databasename: RedTeamSiteDb
+User Id=appuser;Password=CyRadar@123
+Query tạo bảng trong ssms:
+
+Bảng AspNetRoles
+CREATE TABLE [dbo].[AspNetRoles] (
+    [Id] nvarchar(450) NOT NULL PRIMARY KEY,
+    [Name] nvarchar(256) NULL,
+    [NormalizedName] nvarchar(256) NULL,
+    [ConcurrencyStamp] nvarchar(max) NULL
+);
+
+Bảng AspNetUsers
+CREATE TABLE [dbo].[AspNetUsers] (
+    [Id] nvarchar(450) NOT NULL PRIMARY KEY,
+    [UserName] nvarchar(256) NULL,
+    [NormalizedUserName] nvarchar(256) NULL,
+    [Email] nvarchar(256) NULL,
+    [NormalizedEmail] nvarchar(256) NULL,
+    [EmailConfirmed] bit NOT NULL,
+    [PasswordHash] nvarchar(max) NULL,
+    [SecurityStamp] nvarchar(max) NULL,
+    [ConcurrencyStamp] nvarchar(max) NULL,
+    [PhoneNumber] nvarchar(max) NULL,
+    [PhoneNumberConfirmed] bit NOT NULL,
+    [TwoFactorEnabled] bit NOT NULL,
+    [LockoutEnd] datetimeoffset NULL,
+    [LockoutEnabled] bit NOT NULL,
+    [AccessFailedCount] int NOT NULL
+);
+
+Bảng AspNetUserRoles
+
+CREATE TABLE [dbo].[AspNetUserRoles] (
+    [UserId] nvarchar(450) NOT NULL,
+    [RoleId] nvarchar(450) NOT NULL,
+    PRIMARY KEY ([UserId], [RoleId]),
+    FOREIGN KEY ([UserId]) REFERENCES [dbo].[AspNetUsers]([Id]) ON DELETE CASCADE,
+    FOREIGN KEY ([RoleId]) REFERENCES [dbo].[AspNetRoles]([Id]) ON DELETE CASCADE
+);
+
+Bảng AspNetUserClaims
+CREATE TABLE [dbo].[AspNetUserClaims] (
+    [Id] int NOT NULL IDENTITY PRIMARY KEY,
+    [UserId] nvarchar(450) NOT NULL,
+    [ClaimType] nvarchar(max) NULL,
+    [ClaimValue] nvarchar(max) NULL,
+    FOREIGN KEY ([UserId]) REFERENCES [dbo].[AspNetUsers]([Id]) ON DELETE CASCADE
+);
+
+Bảng AspNetRoleClaims
+CREATE TABLE [dbo].[AspNetRoleClaims] (
+    [Id] int NOT NULL IDENTITY PRIMARY KEY,
+    [RoleId] nvarchar(450) NOT NULL,
+    [ClaimType] nvarchar(max) NULL,
+    [ClaimValue] nvarchar(max) NULL,
+    FOREIGN KEY ([RoleId]) REFERENCES [dbo].[AspNetRoles]([Id]) ON DELETE CASCADE
+);
+
+Bảng AspNetUserLogins
+CREATE TABLE [dbo].[AspNetUserLogins] (
+    [LoginProvider] nvarchar(128) NOT NULL,
+    [ProviderKey] nvarchar(128) NOT NULL,
+    [ProviderDisplayName] nvarchar(max) NULL,
+    [UserId] nvarchar(450) NOT NULL,
+    PRIMARY KEY ([LoginProvider], [ProviderKey]),
+    FOREIGN KEY ([UserId]) REFERENCES [dbo].[AspNetUsers]([Id]) ON DELETE CASCADE
+);
+
+Bảng AspNetUserTokens
+CREATE TABLE [dbo].[AspNetUserTokens] (
+    [UserId] nvarchar(450) NOT NULL,
+    [LoginProvider] nvarchar(128) NOT NULL,
+    [Name] nvarchar(128) NOT NULL,
+    [Value] nvarchar(max) NULL,
+    PRIMARY KEY ([UserId], [LoginProvider], [Name]),
+    FOREIGN KEY ([UserId]) REFERENCES [dbo].[AspNetUsers]([Id]) ON DELETE CASCADE
+);
+
+
+
+    
+
