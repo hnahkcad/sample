@@ -1,0 +1,19 @@
+dotnet new webapi -n RedTeamApp
+cd RedTeamApp
+
+
+dotnet publish -c Release -o ./publish
+
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <system.webServer>
+    <handlers>
+      <add name="aspNetCore" path="*" verb="*" modules="AspNetCoreModuleV2" resourceType="Unspecified"/>
+    </handlers>
+    <aspNetCore processPath="dotnet" arguments="RedTeamApp.dll" stdoutLogEnabled="true" stdoutLogFile=".\logs\stdout" hostingModel="InProcess">
+      <environmentVariables>
+        <environmentVariable name="ASPNETCORE_ENVIRONMENT" value="Production" />
+      </environmentVariables>
+    </aspNetCore>
+  </system.webServer>
+</configuration>
