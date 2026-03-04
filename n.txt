@@ -1,3 +1,4 @@
+hacked
 dotnet new webapi -n RedTeamApp
 cd RedTeamApp
 
@@ -16,4 +17,5 @@ dotnet publish -c Release -o ./publish
       </environmentVariables>
     </aspNetCore>
   </system.webServer>
+
 </configuration>
